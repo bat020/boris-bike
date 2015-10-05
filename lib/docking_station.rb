@@ -24,7 +24,7 @@ class DockingStation
   attr_reader :bikes
 
   def none_working?
-    bikes.map{ |bike| bike.broken? }.push(true).inject(&:&)
+    !bikes.map{ |bike| bike.working? }.include?(true)
   end
 
   def full?

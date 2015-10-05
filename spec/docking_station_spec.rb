@@ -19,15 +19,22 @@ describe DockingStation do
       expect{ subject.release_bike }.to raise_error(RuntimeError, 'No bikes available')
     end
     it 'releases a working bike if it has one' do
-      subject.dock(Bike.new)
-      expect(subject.release_bike).to be_working
+      bike = double :bike, working?: true
+      subject.dock(bike)
+      expect(subject.release_bike).to eq bike
+    end
+    it 'will not release a broken bike' do
+      bike = double :bike, working?: false
+      subject.dock(bike)
+      expect{ subject.release_bike }.to raise_error(RuntimeError, 'No bikes available')
     end
   end
 
   describe '#dock' do
     it 'raises an error if capacity has been reached' do
-      subject.capacity.times { subject.dock(Bike.new) }
-      expect{ subject.dock(Bike.new) }.to raise_error(RuntimeError, 'Docking station full')
+      bike = double :bike
+      subject.capacity.times { subject.dock(bike) }
+      expect{ subject.dock(bike) }.to raise_error(RuntimeError, 'Docking station full')
     end
   end
 
